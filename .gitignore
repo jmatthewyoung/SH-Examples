@@ -1,0 +1,6 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Azure IoT Example/.vs/Azure IoT Example/v15/Server/sqlite3
+/Azure IoT Example/.vs
