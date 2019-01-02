@@ -16,10 +16,10 @@ namespace TempAndHumid
         IDHTTemperatureAndHumiditySensor sensor = DeviceFactory.Build.DHTTemperatureAndHumiditySensor(Pin.DigitalPin2, DHTModel.Dht11);
 
         //Enter your Azure IoT Hub Device Connection String
-        string AzureIoTConnectionString = "";
+        string azureIoTConnectionString = "";
 
         //Enter your device's name or hostname
-        string _deviceName = "";
+        string deviceName = "";
 
 
         //               Please ensure you have filled out the connection string and device name above
@@ -27,20 +27,18 @@ namespace TempAndHumid
         //
 
         //Default values
-        int pollingTime = 0;
-        int pollingTimeMS = 0;
+        //Polling time is seconds in between measurements that get sent to the cloud
+        int pollingTime = 60, pollingTimeMS = 0;
         static ICloudClient client;
 
         public void Run(IBackgroundTaskInstance taskInstance)
-        {
-            //60 seconds in between measurements that get sent to the cloud
-            pollingTime = 60;
+        {         
             Debug.WriteLine($"Polling Time is {pollingTime} seconds");
             //Calculate milliseconds to give to the method below for waiting
             pollingTimeMS = pollingTime * 1000;
 
             //Initialize azure cloud client 
-            client = new AzureCloudClient(AzureIoTConnectionString);
+            client = new AzureCloudClient(azureIoTConnectionString);
 
             while (true)
             {
@@ -63,7 +61,7 @@ namespace TempAndHumid
                     {
                         Temperature = sensortemp,
                         Humidity = sensorhum,
-                        DeviceName = _deviceName
+                        DeviceName = deviceName
                     };
                     client.WriteData(data);
                 }
@@ -72,7 +70,7 @@ namespace TempAndHumid
                     Debug.WriteLine(ex.Message);
                 }
 
-                // Wait for the alloted polling time               
+                //Wait for the alloted polling time in milliseconds           
                 Task.Delay(pollingTimeMS).Wait();
             }
         }
